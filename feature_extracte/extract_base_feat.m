@@ -8,9 +8,9 @@ function feat=extract_base_feat(net,img)
 
     imt = imresize(img,[256,256]);
 
-    feat = getFeature2(net,imt,im_mean,'data','pool5n');
+    feat = getFeature2(net,imt,im_mean,'input','pool5n');
     feat = sum(sum(feat,1),2);
-    f2 = getFeature2(net,fliplr(imt),im_mean,'data','pool5n');
+    f2 = getFeature2(net,fliplr(imt),im_mean,'input','pool5n');
     f2 = sum(sum(f2,1),2);
     feat = feat+f2;
     size4 = size(feat,4);

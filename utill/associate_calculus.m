@@ -5,10 +5,6 @@ function [ kfstate, tracklets, assignment, active ] = associate_calculus( idx_ac
       track_idx = idx_active(j);
       % predict state
       kfstate{track_idx} = kfpredict(kfstate{track_idx});
-      if tracklets{track_idx}.oc ~= 0
-          tracklets{track_idx}.track(end+1) = [tracklets{track_idx}.track(2:3) + tracklets{track_idx}.vel];
-
-      end
       dist(j,:) = trackletLocation(object(:,1:4),obj_feat,tracklets{track_idx});
     end
    % gating + hungarian assignment
@@ -36,13 +32,14 @@ function [ kfstate, tracklets, assignment, active ] = associate_calculus( idx_ac
             if tracklets{track_idx}.oc ~= 0
                 [tracklets{track_idx}, object] = update_state(tracklets{track_idx}, object, obj_idx, kfstate{track_idx}, i);
                 tracklets{track_idx}.oc = 0;
+                tracklets{track_idx}.co = tracklets{track_idx}.co + 1;
             else
                 [tracklets{track_idx}, object] = update_state(tracklets{track_idx}, object, obj_idx, kfstate{track_idx}, i);
                 tracklets{track_idx}.co = tracklets{track_idx}.co + 1;
             end
         % if no detection has been assigned => deactivate
         else
-            if tracklets{track_idx}.co >= 2 && tracklets{track_idx}.oc <= 35
+            if tracklets{track_idx}.co >= 2 && tracklets{track_idx}.oc <= 15
                 tracklets{track_idx}.oc = tracklets{track_idx}.oc + 1;
                 prestate = motion_pre(tracklets{track_idx}.track(end,:),tracklets{track_idx}.vel);
                 kfstate{track_idx}.z = prestate';

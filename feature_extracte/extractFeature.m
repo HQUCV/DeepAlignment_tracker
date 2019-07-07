@@ -20,7 +20,7 @@ else
         patch =  imcrop(im,pos(i,:));
         imt1 = imresize(patch,[256,256]);
         patch1 = cat(4,patch1,imt1);
-        imt2 = imresize(patch,[224,224]);
+        imt2 = imresize(patch,[227,227]);
         patch2 = cat(4,patch2,imt2);
     end
     feat1 = extract_base_feat(net1,patch1)';
